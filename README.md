@@ -10,7 +10,7 @@ experiments described in section 3.3 ("A simple supervised example of FF") of th
 The Forward-Forward algorithm is a method for training deep neural networks in a more biologically plausible manner.
 Instead of sharing gradients between layers, it trains each layer based on local losses. 
 
-To implement these local losses, the network performs two forward passes on the data:
+To implement these local losses, the network performs two forward passes:
 The first forward pass is on positive samples, which are representative of the "real" data. 
 For these samples, the network is trained to maximize the "goodness" for each of its layers. 
 In the second forward pass, the network is fed negative samples, 
