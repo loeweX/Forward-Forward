@@ -1,0 +1,31 @@
+seed: 42
+
+input:
+  path: datasets
+  batch_size: 100
+
+
+model:
+  peer_normalization: 0.03
+  momentum: 0.9  # Momentum to use for the running mean in peer normalization loss.
+
+  hidden_dim: 1000
+  num_layers: 3
+
+
+training:
+  epochs: 100
+
+  learning_rate: 1e-3
+  weight_decay: 3e-4
+  momentum: 0.9
+
+  downstream_learning_rate: 1e-2
+  downstream_weight_decay: 3e-3
+
+  val_idx: -1  # -1: validate only once training has finished; n: validate every n epochs.
+
+
+hydra:
+  run:
+    dir: logs
