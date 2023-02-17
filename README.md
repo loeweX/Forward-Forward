@@ -2,7 +2,7 @@
 
 This is a reimplementation of Geoffrey Hinton's Forward-Forward Algorithm in Python/Pytorch. The original
 paper can be found [here](https://arxiv.org/abs/2212.13345) and the official implementation in
-Matlab [here](https://www.cs.toronto.edu/~hinton/). Similarly to the Matlab implementation, this code covers the experiments described in section 3.3 of the paper.
+Matlab [here](https://www.cs.toronto.edu/~hinton/). Similarly to the Matlab implementation, this code covers the experiments described in section 3.3 ("A simple supervised example of FF") of the paper.
 
 ## Setup
 
