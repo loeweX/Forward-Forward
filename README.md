@@ -7,7 +7,7 @@ experiments described in section 3.3 ("A simple supervised example of FF") of th
 
 ## The Forward-Forward Algorithm
 
-The Forward-Forward algorith is a method for training deep neural networks in a more biologically plausible manner.
+The Forward-Forward algorithm is a method for training deep neural networks in a more biologically plausible manner.
 Instead of sharing gradients between layers, it trains each layer based on local losses. 
 
 To implement these local losses, the network performs two forward passes on the data:
