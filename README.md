@@ -2,7 +2,29 @@
 
 This is a reimplementation of Geoffrey Hinton's Forward-Forward Algorithm in Python/Pytorch. The original
 paper can be found [here](https://arxiv.org/abs/2212.13345) and the official implementation in
-Matlab [here](https://www.cs.toronto.edu/~hinton/). Similarly to the Matlab implementation, this code covers the experiments described in section 3.3 ("A simple supervised example of FF") of the paper.
+Matlab [here](https://www.cs.toronto.edu/~hinton/). Similarly to the Matlab implementation, this code covers the 
+experiments described in section 3.3 ("A simple supervised example of FF") of the paper.
+
+## The Forward-Forward Algorithm
+
+The Forward-Forward algorith is a method for training deep neural networks in a more biologically plausible manner.
+Instead of sharing gradients between layers, it trains each layer based on local losses. 
+
+To implement these local losses, the network performs two forward passes on the data:
+The first forward pass is on positive samples, which are representative of the "real" data. 
+For these samples, the network is trained to maximize the "goodness" for each of its layers. 
+In the second forward pass, the network is fed negative samples, 
+which are data perturbations that do not conform to the true data distribution. 
+For these samples, the network is trained to minimize the "goodness".
+
+The goodness can be evaluated in several ways, such as by taking the sum of the squared activities of a layer.
+
+<img src="ForwardForward.jpeg" alt="The Forward-Forward Algorithm" width="600"/>
+
+The image above depicts the training of a network with the Forward-Forward algorithm as implemented in this repository. 
+Here, the positive and negative samples are created by adding a one-hot encoding of the correct or incorrect label 
+to the first ten pixels of the image.
+
 
 ## Setup
 
