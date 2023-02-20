@@ -1,4 +1,4 @@
-# Pytorch Reimplementation of the Forward-Forward Algorithm
+# Reimplementation of the Forward-Forward Algorithm
 
 This is a reimplementation of Geoffrey Hinton's Forward-Forward Algorithm in Python/Pytorch.
 
