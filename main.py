@@ -5,7 +5,7 @@ import hydra
 import torch
 from omegaconf import DictConfig
 
-import utils
+from src import utils
 
 
 def train(opt, model, optimizer):
@@ -18,7 +18,7 @@ def train(opt, model, optimizer):
         optimizer = utils.update_learning_rate(optimizer, opt, epoch)
 
         for inputs, labels in train_loader:
-            inputs, labels = utils.preprocess_inputs(inputs, labels)
+            inputs, labels = utils.preprocess_inputs(opt, inputs, labels)
 
             optimizer.zero_grad()
 
@@ -52,7 +52,7 @@ def validate_or_test(opt, model, partition, epoch=None):
     print(partition)
     with torch.no_grad():
         for inputs, labels in data_loader:
-            inputs, labels = utils.preprocess_inputs(inputs, labels)
+            inputs, labels = utils.preprocess_inputs(opt, inputs, labels)
 
             scalar_outputs = model.forward_downstream_classification_model(
                 inputs, labels
@@ -71,7 +71,9 @@ def my_main(opt: DictConfig) -> None:
     model, optimizer = utils.get_model_and_optimizer(opt)
     model = train(opt, model, optimizer)
     validate_or_test(opt, model, "val")
-    # validate_or_test(opt, model, "test")  # Uncomment once hyper-parameters are fine-tuned.
+
+    if opt.training.final_test:
+        validate_or_test(opt, model, "test")
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-import utils
+from src import utils
 
 
 class FF_MNIST(torch.utils.data.Dataset):

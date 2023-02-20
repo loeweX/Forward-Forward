@@ -3,7 +3,7 @@ import math
 import torch
 import torch.nn as nn
 
-import utils
+from src import utils
 
 
 class FF_model(torch.nn.Module):
@@ -26,7 +26,7 @@ class FF_model(torch.nn.Module):
 
         # Initialize peer normalization loss.
         self.running_means = [
-            torch.zeros(self.num_channels[i]).cuda() + 0.5
+            torch.zeros(self.num_channels[i], device=self.opt.device) + 0.5
             for i in range(self.opt.model.num_layers)
         ]
 
@@ -85,13 +85,13 @@ class FF_model(torch.nn.Module):
 
     def forward(self, inputs, labels):
         scalar_outputs = {
-            "Loss": torch.zeros(1, device="cuda:0"),
-            "Peer Normalization": torch.zeros(1, device="cuda:0"),
+            "Loss": torch.zeros(1, device=self.opt.device),
+            "Peer Normalization": torch.zeros(1, device=self.opt.device),
         }
 
         # Concatenate positive and negative samples and create corresponding labels.
         z = torch.cat([inputs["pos_images"], inputs["neg_images"]], dim=0)
-        posneg_labels = torch.zeros(z.shape[0], device="cuda:0")
+        posneg_labels = torch.zeros(z.shape[0], device=self.opt.device)
         posneg_labels[: self.opt.input.batch_size] = 1
 
         z = z.reshape(z.shape[0], -1)
@@ -125,7 +125,7 @@ class FF_model(torch.nn.Module):
     ):
         if scalar_outputs is None:
             scalar_outputs = {
-                "Loss": torch.zeros(1, device="cuda:0"),
+                "Loss": torch.zeros(1, device=self.opt.device),
             }
 
         z = inputs["neutral_sample"]

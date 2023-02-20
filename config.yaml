@@ -1,4 +1,5 @@
 seed: 42
+device: "cuda"  # cpu or cuda
 
 input:
   path: datasets
@@ -24,6 +25,7 @@ training:
   downstream_weight_decay: 3e-3
 
   val_idx: -1  # -1: validate only once training has finished; n: validate every n epochs.
+  final_test: False  # Set to true to evaluate performance on test-set.
 
 
 hydra:

@@ -8,8 +8,7 @@ import torchvision
 from hydra.utils import get_original_cwd
 from omegaconf import OmegaConf
 
-import FF_model
-import FF_MNIST
+from src import ff_mnist, ff_model
 
 
 def parse_args(opt):
@@ -22,8 +21,9 @@ def parse_args(opt):
 
 
 def get_model_and_optimizer(opt):
-    model = FF_model.FF_model(opt)
-    model = model.cuda()
+    model = ff_model.FF_model(opt)
+    if "cuda" in opt.device:
+        model = model.cuda()
     print(model, "\n")
 
     # Create optimizer with different hyper-parameters for the main model
@@ -53,7 +53,7 @@ def get_model_and_optimizer(opt):
 
 
 def get_data(opt, partition):
-    dataset = FF_MNIST.FF_MNIST(opt, partition)
+    dataset = ff_mnist.FF_MNIST(opt, partition)
 
     # Improve reproducibility in dataloader.
     g = torch.Generator()
@@ -115,9 +115,10 @@ def dict_to_cuda(dict):
     return dict
 
 
-def preprocess_inputs(inputs, labels):
-    inputs = dict_to_cuda(inputs)
-    labels = dict_to_cuda(labels)
+def preprocess_inputs(opt, inputs, labels):
+    if "cuda" in opt.device:
+        inputs = dict_to_cuda(inputs)
+        labels = dict_to_cuda(labels)
     return inputs, labels
 
 
