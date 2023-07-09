@@ -31,3 +31,5 @@ training:
 hydra:
   run:
     dir: logs
+
+run_additional_inference: True  # Set to false to not run multipass inference.
