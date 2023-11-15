@@ -118,6 +118,50 @@ class FF_model(torch.nn.Module):
             inputs, labels, scalar_outputs=scalar_outputs
         )
 
+        if self.opt.run_additional_inference:
+            scalar_outputs = self.forward_downstream_multi_pass(
+                inputs, labels, scalar_outputs=scalar_outputs
+            )
+
+        return scalar_outputs
+    
+    def forward_downstream_multi_pass(
+        self, inputs, labels, scalar_outputs=None,
+    ):
+        if scalar_outputs is None:
+            scalar_outputs = {
+                "Loss": torch.zeros(1, device=self.opt.device),
+            }
+
+        z_all = inputs["all_sample"]
+        z_all = z_all.reshape(z_all.shape[0], z_all.shape[1], -1)
+        ssq_all = []
+        for class_num in range(z_all.shape[1]):
+            z = z_all[:, class_num, :]
+            z = self._layer_norm(z)
+            input_classification_model = []
+
+            with torch.no_grad():
+                for idx, layer in enumerate(self.model):
+                    z = layer(z)
+                    z = self.act_fn.apply(z)
+                    z_unnorm = z.clone()
+                    z = self._layer_norm(z)
+
+                    if idx >= 1:
+                        # print(z.shape)
+                        input_classification_model.append(z_unnorm)
+
+            input_classification_model = torch.concat(input_classification_model, dim=-1)
+            ssq = torch.sum(input_classification_model ** 2, dim=-1)
+            ssq_all.append(ssq)
+        ssq_all = torch.stack(ssq_all, dim=-1)
+        
+        classification_accuracy = utils.get_accuracy(
+            self.opt, ssq_all.data, labels["class_labels"]
+        )
+
+        scalar_outputs["multi_pass_classification_accuracy"] = classification_accuracy
         return scalar_outputs
 
     def forward_downstream_classification_model(

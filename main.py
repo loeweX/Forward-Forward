@@ -57,6 +57,12 @@ def validate_or_test(opt, model, partition, epoch=None):
             scalar_outputs = model.forward_downstream_classification_model(
                 inputs, labels
             )
+
+            if opt.run_additional_inference:
+                scalar_outputs = model.forward_downstream_multi_pass(
+                    inputs, labels, scalar_outputs=scalar_outputs
+                )
+                
             test_results = utils.log_results(
                 test_results, scalar_outputs, num_steps_per_epoch
             )
