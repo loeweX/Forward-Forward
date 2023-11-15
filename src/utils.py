@@ -31,7 +31,7 @@ def get_model_and_optimizer(opt):
     main_model_params = [
         p
         for p in model.parameters()
-        if all(p is not x for x in model.classification_loss.parameters())
+        if all(p is not x for x in model.linear_classifier.parameters())
     ]
     optimizer = torch.optim.SGD(
         [
@@ -42,7 +42,7 @@ def get_model_and_optimizer(opt):
                 "momentum": opt.training.momentum,
             },
             {
-                "params": model.classification_loss.parameters(),
+                "params": model.linear_classifier.parameters(),
                 "lr": opt.training.downstream_learning_rate,
                 "weight_decay": opt.training.downstream_weight_decay,
                 "momentum": opt.training.momentum,
